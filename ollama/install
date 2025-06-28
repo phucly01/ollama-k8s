@@ -1,0 +1,5 @@
+#!/bin/bash
+
+echo "1. Installing open webui and ollama app"
+kubectl apply -f ollama.yaml
+kubectl apply -f webui.yaml
