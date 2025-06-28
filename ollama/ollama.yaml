@@ -21,6 +21,7 @@ spec:
       labels:
         name: ollama
     spec:
+      nodeName: NODENAME
       containers:
       - name: ollama
         image: ollama/ollama:latest
