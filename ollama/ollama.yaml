@@ -45,7 +45,7 @@ spec:
       - hostPath:
           path: /opt/ollama
           type: DirectoryOrCreate
-    name: ollama-storage
+        name: ollama-storage
 ---
 apiVersion: v1
 kind: Service
