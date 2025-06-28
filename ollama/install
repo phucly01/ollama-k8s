@@ -1,5 +1,18 @@
 #!/bin/bash
 
-echo "1. Installing open webui and ollama app"
+echo 1. Determining better node to use by selecting node with more memory
+nodes=(`kubectl get nodes | tr -s ' ' | awk '{print $1}' | tail -n +2`)
+#Get memory of all nodes and sort descending order, pick the first one
+memory=(`echo ${nodes[@]} | xargs kubectl describe node ollama-green-g4 | grep Allocatable -A 10 | grep -E "memory" | tr -s ' ' | awk '{print $2}' | grep -Po "[0-9]+" | sort`)
+for node in ${nodes[@]}; do
+  mem=`kubectl describe node $node | grep Allocatable -A 10 | grep -E "memory" | tr -s ' ' | awk '{print $2}' | grep -Po "[0-9]+"`
+  if [ "$mem" == "${memory[0]}" ]; then
+    sed -i "s/NODENAME/$node/g" webui.yaml
+    sed -i "s/NODENAME/$node/g" ollama.yaml
+    break
+  fi
+done
+
+echo "2. Installing open webui and ollama app"
 kubectl apply -f ollama.yaml
 kubectl apply -f webui.yaml
