@@ -11,7 +11,9 @@ if [ "$?" != "0" ]; then
   kubectl get configmap kube-proxy -n kube-system -o yaml | sed -e "s/strictARP: false/strictARP: true/" | kubectl apply -f - -n kube-system
 fi
 
-echo 3. Add Metallb with KRR-k8s 
+echo 3. Add Metallb with KRR-k8s to master node
+master=`kubectl get nodes | grep control-plane | awk '{print $1}'`
+sed -i "s/NODENAME/nodeName: $master/g' metallb-frr-k8s-v0.15.2.yaml
 kubectl apply -f metallb-frr-k8s-v0.15.2.yaml
 
 echo 4. Apply configmap

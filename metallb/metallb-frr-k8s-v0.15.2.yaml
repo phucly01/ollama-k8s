@@ -2850,6 +2850,7 @@ spec:
         app: metallb
         component: controller
     spec:
+      NODENAME
       containers:
       - args:
         - --port=7472
@@ -2937,6 +2938,7 @@ spec:
         app: frr-k8s-webhook-server
         control-plane: webhook-server
     spec:
+      NODENAME
       containers:
       - args:
         - --log-level=info
