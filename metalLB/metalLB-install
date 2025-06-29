@@ -1,0 +1,20 @@
+#!/bin/bash
+
+echo 1. Allow port 7946
+if [ "`sudo ufw status`" == *" active" ]; then
+  sudo ufw allow 7946/tcp && sudo ufw allow 7946/udp
+fi
+
+echo 2. Set strict ARP
+kubectl get configmap kube-proxy -n kube-system -o yaml | sed -e "s/strictARP: false/strictARP: true/" | kubectl diff -f - -n kube-system
+if [ "$?" != "0" ]; then
+  kubectl get configmap kube-proxy -n kube-system -o yaml | sed -e "s/strictARP: false/strictARP: true/" | kubectl apply -f - -n kube-system
+fi
+
+echo 3. Add Metallb with KRR-k8s 
+kubectl apply -f metallb-frr-k8s-v0.15.2.yaml
+
+echo 4. Apply configmap
+kubectl apply -f metallb-configmap.yaml
+
+
