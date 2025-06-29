@@ -39,7 +39,7 @@ metadata:
   name: webui-svc
   namespace: ollama
 spec:
-  type: NodePort
+  type: LoadBalancer
   selector:
     name: webui
   ports:
@@ -47,9 +47,7 @@ spec:
     name: http
     targetPort: container-port
     protocol: TCP
-    nodePort: 31000
   - port: 443
     name: https
     targetPort: container-port
     protocol: TCP
-    nodePort: 32000
