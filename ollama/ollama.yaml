@@ -34,9 +34,11 @@ spec:
           protocol: TCP
         env:
         - name: PRELOAD_MODELS
-          value: "llama3.2-vision:8b"
+          value: "llama3.2-vision:latest"
         - name: OLLAMA_KEEP_ALIVE
           value: "12h"
+        - name: OLLAMA_DEBUG
+          value: "2"
         lifecycle:
           postStart:
             exec:
