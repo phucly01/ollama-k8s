@@ -16,3 +16,4 @@ done
 echo "2. Installing open webui and ollama app"
 kubectl apply -f ollama.yaml
 kubectl apply -f webui.yaml
+kubectl apply -f ingress.yaml

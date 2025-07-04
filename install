@@ -1,0 +1,8 @@
+#!/bin/bash
+
+./kubernetes-config
+./kubernetes-verify
+cd cert_manager && ./install
+cd ../metallb && ./installLB-install
+cd ../ingress && ./install
+cd ../ollama && ./install
