@@ -39,12 +39,15 @@ metadata:
   name: webui-svc
   namespace: ollama
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   selector:
     name: webui
-  sessionAffinity: none
   ports:
   - port: 80
     name: http
+    targetPort: container-port
+    protocol: TCP
+  - port: 443
+    name: https
     targetPort: container-port
     protocol: TCP

@@ -1,0 +1,53 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: webui-cert
+  namespace: ollama
+spec:
+  isCA: false
+  commonName: webui.kubernetes
+  subject:
+    organizations:
+      - kubernetes
+    organizationalUnits:
+      - ollama
+  secretName: webui-secret
+  privateKey:
+    algorithm: ECDSA
+    size: 384
+  issuerRef:
+    name: ca-issuer
+    kind: ClusterIssuer
+    group: cert-manager.io
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: ca-issuer
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "90"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-redirect-from: http://
+    nginx.ingress.kubernetes.io/proxy-redirect-to: https://
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
+    nginx.ingress.kubernetes.io/upstream-keepalive-timeout: "300"
+  name: webui-ingress
+  namespace: ollama
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: webui.kubernetes
+    http:
+      paths:
+      - backend:
+          service:
+            name: webui-svc
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - webui.kubernetes
+    secretName: webui-secret
